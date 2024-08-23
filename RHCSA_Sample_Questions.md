@@ -127,4 +127,6 @@ Here are 40 practice questions that align with the RHCSA exam objectives:
 40. **Review:**  
     What are the key differences between `systemd` and traditional `init` systems in RHEL 9?
 
+41. Create a new logical volume named `data_lv` using 50PE from volume group `vg01`. Consider each PE size as 8 MB and mount it on `/mnt/data_lv`
+
 These questions are designed to help you practice key tasks and concepts that you might encounter on the RHCSA exam. They cover a broad range of topics to ensure you have a well-rounded understanding of system administration tasks in a RHEL 9 environment.
