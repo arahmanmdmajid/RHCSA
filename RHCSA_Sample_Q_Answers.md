@@ -215,4 +215,90 @@ Here are the answers to the practice questions based on RHEL 8:
     **Answer:**
     - `systemd` is the default init system in RHEL 8, which manages system services, daemons, and processes. It replaces the traditional `init` system and offers parallel service startup, dependency management, and centralized logging (`journalctl`).
 
+41. To create a new logical volume named `data_lv` using 50 Physical Extents (PEs) from the volume group `vg01`, and mount it on `/mnt/data_lv`, follow these steps:
+
+### **1. Calculate the Size of the Logical Volume:**
+- Since each Physical Extent (PE) size is 8 MB, the total size for 50 PEs will be:
+  - `50 PEs * 8 MB/PE = 400 MB`
+
+### **2. Create the Logical Volume:**
+Use the `lvcreate` command to create the logical volume with 50 PEs.
+
+```bash
+sudo lvcreate -l 50 -n data_lv vg01
+```
+- `-l 50`: Specifies the number of PEs to use (50 PEs).
+- `-n data_lv`: Names the new logical volume `data_lv`.
+- `vg01`: Specifies the volume group from which to allocate the PEs.
+
+### **3. Create a Filesystem on the Logical Volume:**
+Next, create a filesystem on the new logical volume. For example, to create an ext4 filesystem:
+
+```bash
+sudo mkfs.ext4 /dev/vg01/data_lv
+```
+
+### **4. Create the Mount Point:**
+Create a directory where the logical volume will be mounted:
+
+```bash
+sudo mkdir /mnt/data_lv
+```
+
+### **5. Mount the Logical Volume:**
+Mount the new logical volume to the `/mnt/data_lv` directory:
+
+```bash
+sudo mount /dev/vg01/data_lv /mnt/data_lv
+```
+
+### **6. Verify the Mount:**
+Check that the logical volume is mounted correctly:
+
+```bash
+df -h /mnt/data_lv
+```
+
+### **7. Make the Mount Persistent Across Reboots:**
+To ensure the logical volume is mounted automatically at boot, add an entry to `/etc/fstab`:
+
+1. First, get the UUID of the logical volume:
+
+   ```bash
+   sudo blkid /dev/vg01/data_lv
+   ```
+
+2. Then, edit the `/etc/fstab` file and add the following line:
+
+   ```
+   UUID=<UUID_of_data_lv>  /mnt/data_lv  ext4  defaults  0  2
+   ```
+
+   Replace `<UUID_of_data_lv>` with the actual UUID obtained from the `blkid` command.
+
+### **Summary of Commands:**
+
+```bash
+# Create a logical volume with 50 PEs
+sudo lvcreate -l 50 -n data_lv vg01
+
+# Create an ext4 filesystem on the logical volume
+sudo mkfs.ext4 /dev/vg01/data_lv
+
+# Create the mount directory
+sudo mkdir /mnt/data_lv
+
+# Mount the logical volume
+sudo mount /dev/vg01/data_lv /mnt/data_lv
+
+# Verify the mount
+df -h /mnt/data_lv
+
+# Get the UUID for fstab entry
+sudo blkid /dev/vg01/data_lv
+
+# Edit /etc/fstab and add the appropriate entry for automatic mounting at boot
+```
+
+This process will create, format, and mount the new logical volume on your system.
 These answers are tailored to RHEL 8 and are intended to help you prepare for the RHCSA exam by providing a practical understanding of the topics covered.
